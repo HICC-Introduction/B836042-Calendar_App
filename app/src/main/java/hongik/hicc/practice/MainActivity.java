@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //test2
         setTheme(R.style.Theme_Calendar_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
