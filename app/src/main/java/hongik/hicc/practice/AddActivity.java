@@ -6,12 +6,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class AddActivity extends AppCompatActivity {
     private EditText scheduleName;
     private String dateMessage;
     private DBHelper dbHelper;
+    private  Date date;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,8 +47,7 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addSchedule();
-                finishAndRemoveTask();
-
+                finish();
             }
         });
 
@@ -64,12 +66,18 @@ public class AddActivity extends AppCompatActivity {
 
         EditText titleTxt = findViewById(R.id.titleTxt);
         String title = titleTxt.getText().toString();
-        if(title == null ) title = "2021-04-03";
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        if(title == null ) title = "None";
+        if(dateMessage == null ) date = new Date();
+        dateMessage = dateFormat.format(date);
 
         String insertSQL = ContactDB.SQL_INSERT+" ( '" +
-                title +"', "+
+                title +"', '"+
                 dateMessage
-                + ")";
+                + "')";
         Log.d("JIHO ","jhtest : "+insertSQL);
         db.execSQL(insertSQL);
 
@@ -85,9 +93,11 @@ public class AddActivity extends AppCompatActivity {
         String month_string = Integer.toString(month+1);
         String day_string = Integer.toString(day);
         String year_string = Integer.toString(year);
+
         dateMessage = (year_string + "-" +  month_string + "-" + day_string);
+        date = java.sql.Date.valueOf(dateMessage);
         dateBtn.setText(dateMessage);
-        Toast.makeText(this,"Date: "+dateMessage,Toast.LENGTH_SHORT).show();
+
     }
 
 }

@@ -46,9 +46,8 @@
 
         <TextView
             android:id="@+id/dateTxtView"
-            android:layout_width="139dp"
-            android:layout_height="69dp"
-            android:text="Today" />
+            android:layout_width="fill_parent"
+            android:layout_height="69dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

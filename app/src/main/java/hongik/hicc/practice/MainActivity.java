@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,11 +28,13 @@ public class MainActivity extends AppCompatActivity {
     DBHelper dbHelper = null ;
 
     CalendarView simpleCalendarView;
-    ArrayList<String> list;
+    ArrayList<String> titleList, dateList;
+    RecycleAdapter adapter;
+    RecyclerView recyclerView;
+    SwipeController swipeController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //test2
         setTheme(R.style.Theme_Calendar_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -39,15 +42,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView dateTxtView = findViewById(R.id.dateTxtView);
-        //캘린더뷰 날짜 이상함 한달 느리게 나옴....젠장
-        simpleCalendarView = (CalendarView) findViewById(R.id.simpleCalendarView); // get the reference of CalendarView
+        simpleCalendarView = (CalendarView) findViewById(R.id.simpleCalendarView);
         simpleCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 Toast.makeText(getApplicationContext(), dayOfMonth + "/" + month + "/" + year, Toast.LENGTH_LONG).show();
-                /*String dateText = month + "월 "+dayOfMonth+"일의 일정";
-                dateTxtView.setText(dateText);*/
-
             }
         });
 
@@ -55,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         String todayText = sdf.format(simpleCalendarView.getDate())+"의 일정";
         dateTxtView.setText(todayText);
 
+        init_tables();
+        load_values();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,24 +66,17 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), AddActivity.class);
                 startActivity(intent);
-                load_values();
             }
         });
 
-        list = new ArrayList<>();
-
-        init_tables();
-        load_values();
-
-        RecycleAdapter adapter = new RecycleAdapter(list);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        adapter = new RecycleAdapter(titleList, dateList);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        SwipeController swipeController = new SwipeController();
+        swipeController = new SwipeController();
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-
 
     }
 
@@ -91,21 +85,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void load_values() {
-
-        SQLiteDatabase sqlDB2 = dbHelper.getWritableDatabase();
-       // sqlDB2.execSQL(ContactDB.SQL_TEST) ;//테스트용-ㅊ삭제할것
-
         SQLiteDatabase sqlDB = dbHelper.getReadableDatabase();
         Cursor cursor = sqlDB.rawQuery(ContactDB.SQL_SELECT, null);
 
+        titleList = new ArrayList<>();
+        dateList = new ArrayList<>();
+
         while (cursor.moveToNext()) { // 레코드가 존재한다면
             String name = cursor.getString(1) ;
-            list.add(name);
+            String date = cursor.getString(2) ;
+            date = date.split("\\s")[0];
+
+            titleList.add(name);
+            dateList.add(date);
+            Log.d("LOAD VALUES_JIHO", name+" " +date);
         }
-
-
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        load_values();
+
+        adapter = new RecycleAdapter(titleList, dateList);
+        recyclerView.setAdapter(adapter);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
