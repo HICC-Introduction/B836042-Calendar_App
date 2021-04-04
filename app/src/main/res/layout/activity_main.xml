@@ -25,7 +25,7 @@
     <CalendarView
         android:id="@+id/simpleCalendarView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="382dp"
         android:layout_marginTop="60dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -40,12 +40,12 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
-        android:layout_height="331dp"
+        android:layout_height="285dp"
         android:layout_gravity="bottom|end"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/dateTxtView"
             android:layout_width="139dp"
             android:layout_height="69dp"
             android:text="Today" />

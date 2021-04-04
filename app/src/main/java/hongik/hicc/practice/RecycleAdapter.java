@@ -43,6 +43,7 @@ class Holder extends RecyclerView.ViewHolder {
 
     public Holder(@NonNull View itemView) {
         super(itemView);
-        tv = itemView.findViewById(R.id.text1);
+        tv = itemView.findViewById(R.id.listTxt);
+
     }
 }
