@@ -16,7 +16,7 @@
 
 
 #### 실행 방법
- - apk 실행 ( Calendar\app\release\app-release.apk )
+ - apk 실행 ( \app\release\app-release.apk )
 
 #### 추후 보완하고 싶은 기능
  -  IOS Swift 개발
